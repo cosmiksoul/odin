@@ -1,5 +1,8 @@
-/* global React, ReactDOM */
-const { useState, useMemo, useEffect, useRef } = React;
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { METRICS_SEED } from './data.js';
+import { GraphView } from './graph-view.jsx';
+import { useTweaks } from './tweaks-panel.jsx';
+import { TweaksUI } from './tweaks-ui.jsx';
 
 // --- TWEAKS DEFAULTS ---
 const TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -1330,8 +1333,8 @@ function CommandPalette({ metrics, open, onClose, onOpen, onRoute, onToggleSave,
 
 // ============ APP ============
 function App() {
-  const [tw, setTweak] = window.useTweaks(TWEAKS_DEFAULTS);
-  const metrics = window.METRICS_SEED;
+  const [tw, setTweak] = useTweaks(TWEAKS_DEFAULTS);
+  const metrics = METRICS_SEED;
 
   // Route: home | catalog
   const [route, setRoute] = useState("home");
@@ -1463,7 +1466,7 @@ function App() {
       <Home variant="health" metrics={metrics} onOpen={setOpenM} onGoCatalog={() => setRoute("catalog")} />
       }
       {route === "graph" &&
-      <window.GraphView metrics={metrics} onOpen={setOpenM} />
+      <GraphView metrics={metrics} onOpen={setOpenM} />
       }
       {route === "catalog" &&
       <main className="main">
@@ -1503,7 +1506,7 @@ function App() {
           }
           </div>
           <Footer metrics={metrics} filtered={filtered} />
-          <window.FiltersDrawer
+          <FiltersDrawer
             open={filtersOpen}
             onClose={() => setFiltersOpen(false)}
             metrics={metrics}
@@ -1567,7 +1570,7 @@ function App() {
         selected={selected} />
       
 
-      <window.TweaksUI tw={tw} setTweak={setTweak} />
+      <TweaksUI tw={tw} setTweak={setTweak} />
     </div>);
 
 }
@@ -1672,7 +1675,7 @@ function ThemeToggle({ tw, setTweak }) {
 
 function FilterGroup({ id, label, options, active, toggle, counts, defaultOpen = true, dim }) {
   const storageKey = `odin.fbar.${id}`;
-  const [open, setOpen] = React.useState(() => {
+  const [open, setOpen] = useState(() => {
     try {const v = localStorage.getItem(storageKey);return v === null ? defaultOpen : v !== "0";} catch {return defaultOpen;}
   });
   const onToggle = () => {
@@ -1791,7 +1794,6 @@ function FiltersDrawer({
     </>);
 
 }
-window.FiltersDrawer = FiltersDrawer;
 
 function FilterBar(p) {
   const activeCount = p.fLevel.size + p.fPrio.size + p.fFreq.size + p.fCat.size + p.fOwner.size;
@@ -2564,4 +2566,4 @@ function CompareModal({ metrics, onClose, onRemove }) {
 
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+export default App;

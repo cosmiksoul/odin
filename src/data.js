@@ -1,5 +1,5 @@
 // Seed metrics — based on data_sample.md, repeated/varied to fill ~48 cards
-window.METRICS_SEED = [
+export const METRICS_SEED = [
   {
     name: "GGR Margin / Hold %", cat: "Revenue", level: "L1", prio: "Must", freq: "Daily",
     owner: "Product", source: "BI",

@@ -24,9 +24,10 @@ out/
 # OS
 Thumbs.db
 
-# Claude Code (local cache)
+# Claude Code (local cache and per-project local settings)
 .claude/projects/
 .claude/cache/
+.claude/settings.local.json
 
 # Vault user data (default-vault is in repo, but actual user vaults are not)
 user-vault/

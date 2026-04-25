@@ -1,0 +1,205 @@
+{
+  "main": {
+    "id": "f037e0d43ab74781",
+    "type": "split",
+    "children": [
+      {
+        "id": "a6e0c5d3e579aee2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "56170ef6070e32b5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docs/project/test-cases-sprint-1.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "test-cases-sprint-1"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "a12bca2f22924bf6",
+    "type": "split",
+    "children": [
+      {
+        "id": "57eef2d7a83b0e90",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a699361f9cf0d424",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "eabb51b60322cc73",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "4bfa45a3cdafed25",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "6d7960fe95d1bfb4",
+    "type": "split",
+    "children": [
+      {
+        "id": "3c4c96a5b7839a9f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "eaf059a53bf50f2d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "docs/project/test-cases-sprint-1.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for test-cases-sprint-1"
+            }
+          },
+          {
+            "id": "0c8a5b08ea285b53",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "docs/project/test-cases-sprint-1.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from test-cases-sprint-1"
+            }
+          },
+          {
+            "id": "70fd2b0f4416852a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "fcd07ffd4e58ae74",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "e2b94c90b04628f9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "docs/project/test-cases-sprint-1.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of test-cases-sprint-1"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "56170ef6070e32b5",
+  "lastOpenFiles": [
+    "vite.config.js.timestamp-1777154411518-40222faef4c2e.mjs",
+    "docs/project/sprint-1-fix-report.md",
+    "dist/index.html",
+    "dist/assets/index-dvu8cNWt.js",
+    "dist/assets/index-DnLNEFek.css",
+    "dist/assets",
+    "docs/project/sprint-1-fix-prompt.md",
+    "vite.config.js.timestamp-1777151877189-6694a0bc5fe58.mjs",
+    "vite.config.js.timestamp-1777151649172-972f0ee52798e8.mjs",
+    "dist/assets/index-DHNCmG1t.css",
+    "dist/assets/index-B676jFUb.js",
+    "vite.config.js.timestamp-1777151592274-da4da4ae84b948.mjs",
+    "docs/project/sprint-report-1.md",
+    "docs/project/test-cases-sprint-1.md",
+    "docs/project/code-review-sprint-1.md",
+    "docs/project/Dev-Cycle.md"
+  ]
+}

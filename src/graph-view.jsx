@@ -1,5 +1,6 @@
-/* global React */
-const { useMemo: useMemoG, useState: useStateG, useRef: useRefG, useEffect: useEffectG } = React;
+import { useMemo, useState, useRef, useEffect } from 'react';
+
+const cx = (...a) => a.filter(Boolean).join(" ");
 
 // Deterministic force-layout-ish positioning:
 // - Columns by level (L1 left, L2 middle, L3 right)
@@ -7,37 +8,37 @@ const { useMemo: useMemoG, useState: useStateG, useRef: useRefG, useEffect: useE
 // - Edges: deps[] pointing from source -> target (drawn as curved lines)
 
 function GraphView({ metrics, onOpen }) {
-  const [hover, setHover] = useStateG(null);
-  const [pinned, setPinned] = useStateG(new Set()); // set of metric names
-  const [selLevel, setSelLevel] = useStateG(new Set(["L1","L2","L3"]));
-  const [selCat, setSelCat] = useStateG(null);
-  const [selOwner, setSelOwner] = useStateG(null);
-  const [selPrio, setSelPrio] = useStateG(new Set(["Must","Should","Nice"]));
-  const [selAlert, setSelAlert] = useStateG("all"); // all | red | yel | alerts | ok
-  const [pan, setPan] = useStateG({ x: 0, y: 0 });
-  const [zoom, setZoom] = useStateG(1);
-  const [drawerOpen, setDrawerOpen] = useStateG(false);
-  useEffectG(() => {
+  const [hover, setHover] = useState(null);
+  const [pinned, setPinned] = useState(new Set()); // set of metric names
+  const [selLevel, setSelLevel] = useState(new Set(["L1","L2","L3"]));
+  const [selCat, setSelCat] = useState(null);
+  const [selOwner, setSelOwner] = useState(null);
+  const [selPrio, setSelPrio] = useState(new Set(["Must","Should","Nice"]));
+  const [selAlert, setSelAlert] = useState("all"); // all | red | yel | alerts | ok
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  useEffect(() => {
     if (!drawerOpen) return;
     const onKey = (e) => { if (e.key === "Escape") setDrawerOpen(false); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [drawerOpen]);
-  const dragRef = useRefG(null);
+  const dragRef = useRef(null);
 
   const W = 1400;
   const H = 900;
 
   // Index categories for cluster rows
-  const cats = useMemoG(() => {
+  const cats = useMemo(() => {
     const s = new Set(metrics.map(m => m.cat));
     return Array.from(s);
   }, [metrics]);
 
-  const owners = useMemoG(() => [...new Set(metrics.map(m => m.owner))].sort(), [metrics]);
+  const owners = useMemo(() => [...new Set(metrics.map(m => m.owner))].sort(), [metrics]);
 
   // Nodes with positions
-  const nodes = useMemoG(() => {
+  const nodes = useMemo(() => {
     const byLevel = { L1: [], L2: [], L3: [] };
     metrics.forEach(m => { if (byLevel[m.level]) byLevel[m.level].push(m); });
 
@@ -63,7 +64,7 @@ function GraphView({ metrics, onOpen }) {
   }, [metrics]);
 
   // Edges from deps[]
-  const edges = useMemoG(() => {
+  const edges = useMemo(() => {
     const byName = Object.fromEntries(nodes.map(n => [n.name, n]));
     const out = [];
     nodes.forEach(n => {
@@ -107,7 +108,7 @@ function GraphView({ metrics, onOpen }) {
   const onMouseDown = (e) => {
     dragRef.current = { sx: e.clientX, sy: e.clientY, px: pan.x, py: pan.y };
   };
-  useEffectG(() => {
+  useEffect(() => {
     const onMove = (e) => {
       if (!dragRef.current) return;
       setPan({ x: dragRef.current.px + (e.clientX - dragRef.current.sx),
@@ -119,7 +120,7 @@ function GraphView({ metrics, onOpen }) {
     return () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp); };
   }, []);
 
-  const hoveredConnected = useMemoG(() => {
+  const hoveredConnected = useMemo(() => {
     if (!hover) return new Set();
     const s = new Set([hover.name]);
     edges.forEach(e => {
@@ -160,13 +161,13 @@ function GraphView({ metrics, onOpen }) {
   const unpinAll = () => setPinned(new Set());
 
   // pinned metrics, in insertion order
-  const pinnedMetrics = useMemoG(() => {
+  const pinnedMetrics = useMemo(() => {
     const byName = Object.fromEntries(metrics.map(m => [m.name, m]));
     return [...pinned].map(n => byName[n]).filter(Boolean);
   }, [pinned, metrics]);
 
   // severity counts for alert chips
-  const sevCounts = useMemoG(() => {
+  const sevCounts = useMemo(() => {
     let red = 0, yel = 0, ok = 0;
     metrics.forEach(m => {
       const s = sev(m.name);
@@ -394,7 +395,7 @@ function GraphView({ metrics, onOpen }) {
             </div>
             <div className="odin__pinned-list">
               {pinnedMetrics.map(m => (
-                <window.PinnedCard
+                <PinnedCard
                   key={m.name}
                   m={m}
                   onOpen={onOpen}
@@ -414,8 +415,6 @@ function GraphView({ metrics, onOpen }) {
     </div>
   );
 }
-
-window.GraphView = GraphView;
 
 // Deterministic value/delta helpers (mirror app.jsx for standalone graph file)
 function gSparkPath(seed, w, h) {
@@ -499,4 +498,4 @@ function PinnedCard({ m, onOpen, onUnpin, onHover, onUnhover, isHovered }) {
     </div>
   );
 }
-window.PinnedCard = PinnedCard;
+export { GraphView, PinnedCard };
