@@ -21,6 +21,9 @@ out/
 *.swp
 *.swo
 
+# Obsidian vault (если открыли проект как vault)
+.obsidian/
+
 # OS
 Thumbs.db
 

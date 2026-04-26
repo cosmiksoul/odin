@@ -5,6 +5,9 @@
 
 export const cx = (...a) => a.filter(Boolean).join(" ");
 
+export const prioColor = { Must: "must", Should: "should", Nice: "nice" };
+export const levelColor = { L1: "l1", L2: "l2", L3: "l3" };
+
 export function sparkPath(seed, w, h) {
   let s = 0;
   for (let i = 0; i < seed.length; i++) s = s * 31 + seed.charCodeAt(i) | 0;

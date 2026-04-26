@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "docs/project/test-cases-sprint-2.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CLAUDE"
+              "title": "test-cases-sprint-2"
             }
           }
         ]
@@ -185,21 +185,25 @@
   },
   "active": "56170ef6070e32b5",
   "lastOpenFiles": [
-    "vite.config.js.timestamp-1777227288639-7e996a08ba4fe.mjs",
-    "dist/assets/index-BCYvDBwt.js",
-    "src/lib/util.js",
-    "src/lib",
+    "CLAUDE.md",
+    "docs/project/test-cases-sprint-2.md",
+    "docs/project/sprint-2-fix-prompt.md",
+    "docs/project/code-review-sprint-2.md",
+    "docs/project/sprint-report-2.md",
+    "dist/assets/index-C394U7hA.js",
+    "dist/assets/index-Ck8vEYP8.css",
+    "dist/assets/index-Cl8RPlQ4.js",
+    "vite.config.js.timestamp-1777230063818-071fecf9f01cd.mjs",
+    "dist/assets/index-DFhs6ODg.js",
+    "src/sedeeEBeF",
+    "src/seduOYlfS",
+    "src/components/ControlBar.jsx",
+    "src/components/FiltersDrawer.jsx",
+    "src/components/MetricPreview.jsx",
     "docs/project/sprint-2-prompt.md",
     "docs/project/test-cases-sprint-1.md",
-    "vite.config.js.timestamp-1777154411518-40222faef4c2e.mjs",
     "docs/project/sprint-1-fix-report.md",
-    "dist/index.html",
-    "dist/assets/index-dvu8cNWt.js",
-    "dist/assets/index-DnLNEFek.css",
-    "dist/assets",
     "docs/project/sprint-1-fix-prompt.md",
-    "vite.config.js.timestamp-1777151877189-6694a0bc5fe58.mjs",
-    "vite.config.js.timestamp-1777151649172-972f0ee52798e8.mjs",
     "docs/project/sprint-report-1.md",
     "docs/project/code-review-sprint-1.md",
     "docs/project/Dev-Cycle.md"

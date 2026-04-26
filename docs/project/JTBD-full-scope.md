@@ -240,6 +240,8 @@
 - [ ] **Загрузить 236 метрик из seed JSON** вместо захардкоженных 47 в `data.js` `[Sprint 2]` — см. `default-vault/_seed/igaming_metrics.json`
 - [ ] **Bundled-fonts вместо Google Fonts CDN** — `@import url('https://fonts.googleapis.com/...')` в `styles.css` нарушит ADR-008 (local-first) при упаковке в Electron. Фикс до M3 `[pre-M3]`
 - [ ] **Saved/watchlist persistence** — заменить browser `localStorage` на file-based store или config (для Electron). Отложено `[M3 или отдельный спринт]`
+- [ ] **Graph scaling на 236 нодах** — текущий layout перегружен, подписи перекрываются. Нужен force-directed layout / clustering / filter-driven view / авто-группировка по category внутри колонок L1/L2/L3 `[Sprint 3]`
+- [ ] **Catalog scroll visibility** — после загрузки 236 метрик скрытый scrollbar делает прокрутку «слепой» (непонятен прогресс). Варианты: видимый scrollbar / sticky header с прогресс-баром / pagination / virtualized list `[Sprint 3]`
 
 ---
 

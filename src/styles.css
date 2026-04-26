@@ -2332,3 +2332,148 @@ html, body { overflow-x: hidden; }
 }
 .odin__cats--scroll::-webkit-scrollbar { width: 4px; }
 .odin__cats--scroll::-webkit-scrollbar-thumb { background: var(--line-2); }
+
+/* ===== Sprint 2: graph as flex column so ControlBar sits on top ===== */
+.odin { display: flex; flex-direction: column; }
+.odin > .odin__canvas { flex: 1; min-height: 0; }
+
+/* ===== Sprint 2: unified ControlBar (catalog + graph) ===== */
+.cbar {
+  display: flex; align-items: center; gap: 14px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 11px;
+  min-height: 44px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 5;
+}
+.cbar__counter {
+  display: inline-flex; align-items: baseline; gap: 4px;
+  color: var(--fg-2);
+  letter-spacing: 0.04em;
+}
+.cbar__count-n { color: var(--fg); font-weight: 700; font-size: 13px; }
+.cbar__count-sep { color: var(--fg-4); }
+.cbar__count-tot { color: var(--fg-3); }
+.cbar__count-lbl { color: var(--fg-4); font-size: 10px; letter-spacing: 0.08em; margin-left: 4px; text-transform: uppercase; }
+
+.cbar__alert {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--fg-2);
+  letter-spacing: 0.04em;
+}
+.cbar__dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  display: inline-block;
+}
+.cbar__alert-sep { color: var(--fg-4); margin: 0 2px; }
+
+.cbar__spacer { flex: 1; }
+.cbar__view { display: inline-flex; align-items: center; gap: 8px; }
+
+.cbar__size {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  height: 26px;
+  padding: 0 4px 0 8px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.cbar__size-lbl { color: var(--fg-4); margin-right: 4px; }
+.cbar__sizeb {
+  background: transparent; border: 0; color: var(--fg-3);
+  font-family: inherit; font-weight: inherit; font-size: inherit;
+  padding: 0 8px; height: 22px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 140ms, color 140ms;
+}
+.cbar__sizeb:hover { color: var(--fg); }
+.cbar__sizeb--on { background: var(--accent); color: #000; }
+
+.cbar__zoom {
+  display: inline-flex; align-items: stretch;
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  height: 26px;
+  font-size: 11px;
+}
+.cbar__zoom button {
+  background: transparent; border: 0; color: var(--fg-2);
+  padding: 0 10px;
+  font-family: inherit; font-size: inherit;
+  cursor: pointer;
+  border-right: 1px solid var(--line-2);
+  min-width: 36px;
+}
+.cbar__zoom button:last-child { border-right: 0; }
+.cbar__zoom button:hover { background: var(--bg-3); color: var(--fg); }
+
+/* ===== Sprint 2: Catalog L1/L2/L3 collapsible sections ===== */
+.catsec { margin: 8px 0 0; }
+.catsec__hdr {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  color: var(--fg);
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: background 140ms;
+}
+.catsec__hdr:hover { background: var(--bg-3); }
+.catsec__chev {
+  display: inline-block; width: 12px;
+  color: var(--fg-3); font-size: 11px;
+}
+.catsec__lvl {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  padding: 2px 6px; border-radius: 2px; border: 1px solid currentColor;
+}
+.catsec__lvl--l1 { color: var(--l1); }
+.catsec__lvl--l2 { color: var(--l2); }
+.catsec__lvl--l3 { color: var(--l3); }
+.catsec__title {
+  font-size: 12px; font-weight: 600; color: var(--fg);
+  letter-spacing: 0.02em;
+}
+.catsec__n {
+  margin-left: auto;
+  color: var(--fg-3); font-size: 11px;
+  background: var(--bg-3); border: 1px solid var(--line-2);
+  padding: 2px 8px; border-radius: 2px;
+}
+.catsec--coll .catsec__hdr { opacity: 0.75; }
+
+/* ===== Sprint 2: Graph tooltip — readable status+value+delta ===== */
+.odin__tooltip {
+  z-index: 6;  /* above .cbar (z:5), .odin__pinned (z:5) */
+  background: var(--bg-2);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 16px color-mix(in oklab, #000 35%, transparent);
+}
+.odin__tt-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.odin__tt-status {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  padding: 2px 6px; border-radius: 2px;
+}
+.odin__tt-val {
+  font-size: 14px; font-weight: 700; color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.odin__tt-delta {
+  font-size: 11px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+.odin__tt-delta.up { color: var(--up); }
+.odin__tt-delta.down { color: var(--down); }
+.odin__tt-meta { font-size: 10px; letter-spacing: 0.06em; color: var(--fg-3); margin-top: 2px; }
+
