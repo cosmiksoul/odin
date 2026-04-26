@@ -1,14 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { METRICS_SEED } from './data.js';
 import { GraphView } from './graph-view.jsx';
-import { useTweaks } from './tweaks-panel.jsx';
-import { TweaksUI } from './tweaks-ui.jsx';
-
-// --- TWEAKS DEFAULTS ---
-const TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "preset": "dark-lime",
-  "density": "normal"
-} /*EDITMODE-END*/;
+import { cx, sparkPath, fakeValue, fakeDelta, sevBadge } from './lib/util.js';
 
 const PRESETS = {
   "dark-lime": { theme: "dark", accent: "lime" },
@@ -16,7 +9,6 @@ const PRESETS = {
 };
 
 // ============ UTIL ============
-const cx = (...a) => a.filter(Boolean).join(" ");
 const prioColor = { Must: "must", Should: "should", Nice: "nice" };
 const levelColor = { L1: "l1", L2: "l2", L3: "l3" };
 
@@ -139,45 +131,6 @@ function MetricCard({ m, onOpen, showCta, view, freqIdx, saved, onToggleSave, on
       }
     </div>);
 
-}
-
-// Pseudo-random sparkline path
-function sparkPath(seed, w, h) {
-  let s = 0;
-  for (let i = 0; i < seed.length; i++) s = s * 31 + seed.charCodeAt(i) | 0;
-  const n = 24;
-  let d = "";
-  for (let i = 0; i < n; i++) {
-    s = s * 1103515245 + 12345 & 0x7fffffff;
-    const y = s % 1000 / 1000;
-    const x = i / (n - 1) * w;
-    const yy = h * 0.15 + y * h * 0.7;
-    d += (i === 0 ? "M" : "L") + x.toFixed(1) + "," + yy.toFixed(1) + " ";
-  }
-  return d;
-}
-function fakeValue(m) {
-  const h = m.name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const cat = m.name.toLowerCase();
-  if (cat.includes("%") || cat.includes("rate") || cat.includes("margin") || cat.includes("share") || cat.includes("retention") || cat.includes("conversion") || cat.includes("variance") || cat.includes("uptime") || cat.includes("hold")) return (h % 900 / 10 + 5).toFixed(2) + "%";
-  if (cat.includes("time") || cat.includes("latency") || cat.includes("duration") || cat.includes("freshness")) return (h % 180 / 10 + 0.5).toFixed(1) + "s";
-  if (cat.includes("count") || cat.includes("registr") || cat.includes("dau") || cat.includes("mau")) return (h % 50000 + 1000).toLocaleString("en");
-  if (cat.includes("deposit") || cat.includes("arpu") || cat.includes("ltv") || cat.includes("cac") || cat.includes("ggr") || cat.includes("ngr") || cat.includes("wager")) return "$" + (h % 5000 / 10 + 8).toFixed(2);
-  if (cat.includes("ratio")) return (h % 400 / 100 + 1).toFixed(2) + "×";
-  return (h % 999 + 10).toString();
-}
-function sevBadge(name) {
-  const h = name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const m = h % 7;
-  if (m === 0) return "red";
-  if (m === 1 || m === 2) return "yel";
-  return null;
-}
-function fakeDelta(name, salt) {
-  const h = (name + salt).split("").reduce((a, c) => a * 31 + c.charCodeAt(0), 7);
-  const abs = Math.abs(h) % 900 / 100 + 0.1;
-  const sign = h % 2 === 0 ? 1 : -1;
-  return +(sign * abs).toFixed(2);
 }
 
 // ============ MARKDOWN SPEC ============
@@ -1333,7 +1286,8 @@ function CommandPalette({ metrics, open, onClose, onOpen, onRoute, onToggleSave,
 
 // ============ APP ============
 function App() {
-  const [tw, setTweak] = useTweaks(TWEAKS_DEFAULTS);
+  const [preset, setPreset] = useState("dark-lime");
+  const [density, setDensity] = useState("normal");
   const metrics = METRICS_SEED;
 
   // Route: home | catalog
@@ -1412,10 +1366,7 @@ function App() {
     });
   }, [metrics, search, fLevel, fPrio, fFreq, fCat, fOwner]);
 
-  // Apply preset (if set) — overrides theme+accent
-  const preset = PRESETS[tw.preset];
-  const effTheme = preset ? preset.theme : tw.theme;
-  const effAccent = preset ? preset.accent : tw.accent;
+  const { theme: effTheme, accent: effAccent } = PRESETS[preset] || PRESETS["dark-lime"];
   const accentMap = {
     lime: "#c7ff45",
     magenta: "#ff3fa4",
@@ -1427,7 +1378,7 @@ function App() {
     normal: { card: 220, gap: 10, pad: 14 },
     spacious: { card: 268, gap: 16, pad: 18 }
   };
-  const d = densityMap[tw.density] || densityMap.normal;
+  const d = densityMap[density] || densityMap.normal;
 
   const rootStyle = {
     "--accent": accentMap[effAccent] || accentMap.lime,
@@ -1439,7 +1390,7 @@ function App() {
     "app",
     `theme--${effTheme}`,
     `type--mono`,
-    `density--${tw.density}`
+    `density--${density}`
   );
 
   const openByName = (name) => {
@@ -1457,8 +1408,8 @@ function App() {
         n={filtered.length}
         total={metrics.length}
         savedCount={saved.size}
-        tw={tw}
-        setTweak={setTweak}
+        preset={preset}
+        setPreset={setPreset}
         onOpenPalette={() => setPaletteOpen(true)} />
       
 
@@ -1479,7 +1430,7 @@ function App() {
           fOwner={fOwner} tOwner={toggle(setFOwner)}
           categories={categories} owners={owners}
           view={view} setView={setView}
-          density={tw.density} setDensity={(v) => setTweak("density", v)}
+          density={density} setDensity={setDensity}
           onOpenFilters={() => setFiltersOpen(true)}
           onClear={() => {setFLevel(new Set());setFPrio(new Set());setFFreq(new Set());setFCat(new Set());setFOwner(new Set());setSearch("");}} />
         
@@ -1568,14 +1519,12 @@ function App() {
         onToggleSelect={toggleSelect}
         saved={saved}
         selected={selected} />
-      
 
-      <TweaksUI tw={tw} setTweak={setTweak} />
     </div>);
 
 }
 
-function TopBar({ route, setRoute, search, setSearch, n, total, savedCount, tw, setTweak, onOpenPalette }) {
+function TopBar({ route, setRoute, search, setSearch, n, total, savedCount, preset, setPreset, onOpenPalette }) {
   return (
     <header className="topbar">
       <div className="topbar__l">
@@ -1616,11 +1565,11 @@ function TopBar({ route, setRoute, search, setSearch, n, total, savedCount, tw, 
           { key: "dark-lime", label: "DARK", icon: "☽" },
           { key: "light-magenta", label: "LIGHT", icon: "☀" }].
           map((opt) => {
-            const on = tw.preset === opt.key;
+            const on = preset === opt.key;
             return (
               <button
                 key={opt.key}
-                onClick={() => setTweak("preset", opt.key)}
+                onClick={() => setPreset(opt.key)}
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 6,
                   padding: "0 12px",

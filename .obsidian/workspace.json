@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/project/test-cases-sprint-1.md",
+                "file": "CLAUDE.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "test-cases-sprint-1"
+              "title": "CLAUDE"
             }
           }
         ]
@@ -185,6 +185,12 @@
   },
   "active": "56170ef6070e32b5",
   "lastOpenFiles": [
+    "vite.config.js.timestamp-1777227288639-7e996a08ba4fe.mjs",
+    "dist/assets/index-BCYvDBwt.js",
+    "src/lib/util.js",
+    "src/lib",
+    "docs/project/sprint-2-prompt.md",
+    "docs/project/test-cases-sprint-1.md",
     "vite.config.js.timestamp-1777154411518-40222faef4c2e.mjs",
     "docs/project/sprint-1-fix-report.md",
     "dist/index.html",
@@ -194,11 +200,7 @@
     "docs/project/sprint-1-fix-prompt.md",
     "vite.config.js.timestamp-1777151877189-6694a0bc5fe58.mjs",
     "vite.config.js.timestamp-1777151649172-972f0ee52798e8.mjs",
-    "dist/assets/index-DHNCmG1t.css",
-    "dist/assets/index-B676jFUb.js",
-    "vite.config.js.timestamp-1777151592274-da4da4ae84b948.mjs",
     "docs/project/sprint-report-1.md",
-    "docs/project/test-cases-sprint-1.md",
     "docs/project/code-review-sprint-1.md",
     "docs/project/Dev-Cycle.md"
   ]

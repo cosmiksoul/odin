@@ -1,6 +1,5 @@
 import { useMemo, useState, useRef, useEffect } from 'react';
-
-const cx = (...a) => a.filter(Boolean).join(" ");
+import { cx, sparkPath, fakeValue, fakeDelta, sevBadge } from './lib/util.js';
 
 // Deterministic force-layout-ish positioning:
 // - Columns by level (L1 left, L2 middle, L3 right)
@@ -76,14 +75,6 @@ function GraphView({ metrics, onOpen }) {
     return out;
   }, [nodes]);
 
-  const sev = (name) => {
-    const h = name.split("").reduce((a,c)=>a+c.charCodeAt(0),0);
-    const m = h%7;
-    if (m === 0) return "red";
-    if (m === 1 || m === 2) return "yel";
-    return null;
-  };
-
   const levelColor = (lv) => lv === "L1" ? "var(--l1)" : lv === "L2" ? "var(--l2)" : "var(--l3)";
 
   // Filter
@@ -93,7 +84,7 @@ function GraphView({ metrics, onOpen }) {
     if (selOwner && n.owner !== selOwner) return false;
     if (!selPrio.has(n.prio)) return false;
     if (selAlert !== "all") {
-      const s = sev(n.name);
+      const s = sevBadge(n.name);
       if (selAlert === "red" && s !== "red") return false;
       if (selAlert === "yel" && s !== "yel") return false;
       if (selAlert === "alerts" && !s) return false;
@@ -170,7 +161,7 @@ function GraphView({ metrics, onOpen }) {
   const sevCounts = useMemo(() => {
     let red = 0, yel = 0, ok = 0;
     metrics.forEach(m => {
-      const s = sev(m.name);
+      const s = sevBadge(m.name);
       if (s === "red") red++;
       else if (s === "yel") yel++;
       else ok++;
@@ -324,7 +315,7 @@ function GraphView({ metrics, onOpen }) {
             })}
             {/* nodes */}
             {visibleNodes.map(n => {
-              const s = sev(n.name);
+              const s = sevBadge(n.name);
               const isHov = hover?.name === n.name;
               const isConn = hover && hoveredConnected.has(n.name);
               const dim = hover && !isHov && !isConn;
@@ -416,46 +407,12 @@ function GraphView({ metrics, onOpen }) {
   );
 }
 
-// Deterministic value/delta helpers (mirror app.jsx for standalone graph file)
-function gSparkPath(seed, w, h) {
-  let s = 0;
-  for (let i = 0; i < seed.length; i++) s = s * 31 + seed.charCodeAt(i) | 0;
-  const rand = () => { s = s * 1103515245 + 12345 & 0x7fffffff; return s / 0x7fffffff; };
-  const pts = 12;
-  let d = "";
-  for (let i = 0; i < pts; i++) {
-    const x = i / (pts - 1) * w;
-    const y = rand() * h;
-    d += (i === 0 ? "M" : "L") + x.toFixed(1) + "," + y.toFixed(1);
-  }
-  return d;
-}
-function gFakeValue(m) {
-  const h = m.name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const cat = m.name.toLowerCase();
-  if (cat.includes("%") || cat.includes("rate") || cat.includes("margin") || cat.includes("uptime")) return (h % 800 / 10 + 5).toFixed(2) + "%";
-  if (cat.includes("ltv") || cat.includes("cac") || cat.includes("cost") || cat.includes("deposit") || cat.includes("wager") || cat.includes("winnings") || cat.includes("revenue") || cat.includes("ggr") || cat.includes("ngr")) return "$" + (h % 500 + 10).toFixed(2);
-  if (cat.includes("count") || cat.includes("dau") || cat.includes("mau")) return String(h % 2000 + 100);
-  return (h % 999 + 10).toString();
-}
-function gFakeDelta(name) {
-  const h = name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  return (h % 190 - 95) / 10;
-}
-function gSev(name) {
-  const h = name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const m = h % 7;
-  if (m === 0) return "red";
-  if (m === 1 || m === 2) return "yel";
-  return null;
-}
-
 function PinnedCard({ m, onOpen, onUnpin, onHover, onUnhover, isHovered }) {
-  const val = gFakeValue(m);
-  const delta = gFakeDelta(m.name);
-  const sev = gSev(m.name);
+  const val = fakeValue(m);
+  const delta = fakeDelta(m.name);
+  const sev = sevBadge(m.name);
   const isDown = delta < 0;
-  const spark = gSparkPath(m.name + "_pin", 56, 18);
+  const spark = sparkPath(m.name + "_pin", 56, 18);
   const lvlCls = m.level === "L1" ? "l1" : m.level === "L2" ? "l2" : "l3";
   return (
     <div
