@@ -240,8 +240,11 @@
 - [ ] **Загрузить 236 метрик из seed JSON** вместо захардкоженных 47 в `data.js` `[Sprint 2]` — см. `default-vault/_seed/igaming_metrics.json`
 - [ ] **Bundled-fonts вместо Google Fonts CDN** — `@import url('https://fonts.googleapis.com/...')` в `styles.css` нарушит ADR-008 (local-first) при упаковке в Electron. Фикс до M3 `[pre-M3]`
 - [ ] **Saved/watchlist persistence** — заменить browser `localStorage` на file-based store или config (для Electron). Отложено `[M3 или отдельный спринт]`
-- [ ] **Graph scaling на 236 нодах** — текущий layout перегружен, подписи перекрываются. Нужен force-directed layout / clustering / filter-driven view / авто-группировка по category внутри колонок L1/L2/L3 `[Sprint 3]`
-- [ ] **Catalog scroll visibility** — после загрузки 236 метрик скрытый scrollbar делает прокрутку «слепой» (непонятен прогресс). Варианты: видимый scrollbar / sticky header с прогресс-баром / pagination / virtualized list `[Sprint 3]`
+- [ ] **Graph scaling на 236 нодах** — текущий layout перегружен, подписи перекрываются. Sprint 2 fix-cycle разнесёт ноды и (опционально) добавит auto-hide labels at low zoom — это **temporary mitigation**. Полное решение в Sprint 3:
+  - **Filter-driven graph** (рекомендация Cowork) — по дефолту L2/L3 свёрнуты (после Sprint 2 fix), показывается только L1 ~58 нод. Если пользователь хочет глубже — фильтрует по L2/L3 и видит только релевантные. Граф = investigation tool, не overview map.
+  - Альтернативы (не рекомендую): force-directed layout (d3-force), clustering, virtualization. Дороже в реализации, не решают product-проблему.
+  - **Сворачивание отдельных нод** — обсуждено и отклонено: создаёт state hell, конфликт с pin-механикой. Текущий collapse на уровне секций L1/L2/L3 — правильная гранулярность.
+- [ ] **Catalog scroll visibility** — после загрузки 236 метрик скрытый scrollbar делает прокрутку «слепой» (непонятен прогресс). Варианты: видимый кастомный scrollbar (5 строк CSS, рекомендую) / sticky header с прогресс-баром / virtualized list (overkill для 236) `[Sprint 3]`
 
 ---
 

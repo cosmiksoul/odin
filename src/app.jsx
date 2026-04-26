@@ -623,11 +623,16 @@ function App() {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Catalog L1/L2/L3 section collapse — persisted per level.
+  // FIX-5: first-run defaults — L1 expanded, L2/L3 collapsed. Existing
+  // localStorage values (incl. explicit "0" for expanded) are honored.
   const [catColl, setCatColl] = useState(() => {
+    const defaults = { L1: false, L2: true, L3: true };
     const out = {};
     for (const lv of ["L1", "L2", "L3"]) {
-      try { out[lv] = localStorage.getItem(`odin.catalog.section.${lv.toLowerCase()}.collapsed`) === "1"; }
-      catch { out[lv] = false; }
+      try {
+        const raw = localStorage.getItem(`odin.catalog.section.${lv.toLowerCase()}.collapsed`);
+        out[lv] = raw === null ? defaults[lv] : raw === "1";
+      } catch { out[lv] = defaults[lv]; }
     }
     return out;
   });
@@ -819,13 +824,21 @@ function App() {
             const items = filteredByLevel[lv];
             if (!items.length) return null;
             const collapsed = catColl[lv];
-            const title = lv === "L1" ? "Стратегические" : lv === "L2" ? "Операционные" : "Диагностические";
+            const title = lv === "L1" ? "СТРАТЕГИЧЕСКИЕ" : lv === "L2" ? "ОПЕРАЦИОННЫЕ" : "ДИАГНОСТИЧЕСКИЕ";
+            const subtitle = lv === "L1"
+              ? "C-level · daily review · падение = проблема бизнеса"
+              : lv === "L2"
+              ? "Product · CRM · Marketing · ищут причину изменений в L1"
+              : "Deep-dive под аномалию из L2";
             return (
               <section key={lv} className={cx("catsec", collapsed && "catsec--coll")}>
                 <button className="catsec__hdr" onClick={() => toggleCatColl(lv)}>
                   <span className="catsec__chev mono">{collapsed ? "▸" : "▾"}</span>
                   <span className={cx("catsec__lvl mono", `catsec__lvl--${lv.toLowerCase()}`)}>{lv}</span>
-                  <span className="catsec__title">{title}</span>
+                  <div className="catsec__titlewrap">
+                    <span className="catsec__title">{title}</span>
+                    <span className="catsec__subtitle mono">{subtitle}</span>
+                  </div>
                   <span className="catsec__n mono">{items.length}</span>
                 </button>
                 {!collapsed &&

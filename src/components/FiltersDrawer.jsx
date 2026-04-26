@@ -2,7 +2,7 @@
 // Section order is fixed: Alerts → Level → Priority → Owner → Freq → Category.
 // All filters are Set-based; an empty Set means "no filter applied".
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { cx, sevBadge } from '../lib/util.js';
 
 function Chip({ active, children, onClick, count, dim }) {
@@ -44,6 +44,21 @@ function FilterGroup({ id, label, options, active, toggle, counts, defaultOpen =
     </div>);
 }
 
+// Cascading counts pattern: each filter group's counts are computed against
+// metrics filtered by all OTHER active filters — so picking L1 narrows the
+// counts shown in PRIORITY/OWNER/CATEGORY/FREQ/ALERTS, but LEVEL itself still
+// shows the full L1/L2/L3 distribution (otherwise the unselected levels would
+// always read 0 and the user couldn't pivot).
+function passesExcept(m, except, f) {
+  if (except !== "alert" && f.fAlert.size && !f.fAlert.has(sevBadge(m.name) || "ok")) return false;
+  if (except !== "level" && f.fLevel.size && !f.fLevel.has(m.level)) return false;
+  if (except !== "prio" && f.fPrio.size && !f.fPrio.has(m.prio)) return false;
+  if (except !== "owner" && f.fOwner.size && !f.fOwner.has(m.owner)) return false;
+  if (except !== "freq" && f.fFreq.size && !f.fFreq.has(m.freq)) return false;
+  if (except !== "cat" && f.fCat.size && !f.fCat.has(m.cat)) return false;
+  return true;
+}
+
 function FiltersDrawer({
   open, onClose,
   metrics,
@@ -64,8 +79,17 @@ function FiltersDrawer({
   }, [open, onClose]);
 
   const alertOpts = ["red", "yel", "ok"];
-  const alertLabels = { red: "Red", yel: "Yel", ok: "OK" };
-  const alertCounts = (a) => metrics.filter((m) => (sevBadge(m.name) || "ok") === a).length;
+
+  const filterState = { fAlert, fLevel, fPrio, fOwner, fFreq, fCat };
+  // One pre-filtered subset per section, excluding that section's own filter.
+  const sets = useMemo(() => ({
+    alert: metrics.filter((m) => passesExcept(m, "alert", filterState)),
+    level: metrics.filter((m) => passesExcept(m, "level", filterState)),
+    prio:  metrics.filter((m) => passesExcept(m, "prio",  filterState)),
+    owner: metrics.filter((m) => passesExcept(m, "owner", filterState)),
+    freq:  metrics.filter((m) => passesExcept(m, "freq",  filterState)),
+    cat:   metrics.filter((m) => passesExcept(m, "cat",   filterState)),
+  }), [metrics, fAlert, fLevel, fPrio, fOwner, fFreq, fCat]);
 
   const activeCount =
     fAlert.size + fLevel.size + fPrio.size + fOwner.size + fFreq.size + fCat.size;
@@ -92,22 +116,28 @@ function FiltersDrawer({
         <div className="fdrw__body">
           <FilterGroup
             id="alert" label="ALERTS" options={alertOpts} active={fAlert} toggle={tAlert}
-            counts={alertCounts} defaultOpen={true} />
+            counts={(a) => sets.alert.filter((m) => (sevBadge(m.name) || "ok") === a).length}
+            defaultOpen={true} />
           <FilterGroup
             id="level" label="LEVEL" options={["L1", "L2", "L3"]} active={fLevel} toggle={tLevel}
-            counts={(l) => metrics.filter((m) => m.level === l).length} defaultOpen={true} />
+            counts={(l) => sets.level.filter((m) => m.level === l).length}
+            defaultOpen={true} />
           <FilterGroup
             id="prio" label="PRIORITY" options={["Must", "Should", "Nice"]} active={fPrio} toggle={tPrio}
-            counts={(p) => metrics.filter((m) => m.prio === p).length} defaultOpen={true} />
+            counts={(p) => sets.prio.filter((m) => m.prio === p).length}
+            defaultOpen={true} />
           <FilterGroup
             id="owner" label="OWNER" options={owners} active={fOwner} toggle={tOwner}
-            counts={(o) => metrics.filter((m) => m.owner === o).length} defaultOpen={false} dim />
+            counts={(o) => sets.owner.filter((m) => m.owner === o).length}
+            defaultOpen={false} dim />
           <FilterGroup
             id="freq" label="FREQ" options={frequencies} active={fFreq} toggle={tFreq}
-            counts={(f) => metrics.filter((m) => m.freq === f).length} defaultOpen={true} />
+            counts={(f) => sets.freq.filter((m) => m.freq === f).length}
+            defaultOpen={true} />
           <FilterGroup
             id="cat" label="CATEGORY" options={categories} active={fCat} toggle={tCat}
-            counts={(c) => metrics.filter((m) => m.cat === c).length} defaultOpen={false} />
+            counts={(c) => sets.cat.filter((m) => m.cat === c).length}
+            defaultOpen={false} />
         </div>
       </aside>
     </>);

@@ -23,15 +23,31 @@ export function sparkPath(seed, w, h) {
   return d;
 }
 
+// Native compact formatter — no external libs.
+// Examples: formatCompactNumber(1500) = "1.5K", (50_000_000) = "50M",
+//           formatCompactNumber(45.32, 'percent') = "45.32%",
+//           formatCompactNumber(120.5, 'currency') = "$120.50",
+//           formatCompactNumber(120000, 'currency') = "$120K".
+const _COMPACT = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+export function formatCompactNumber(n, kind) {
+  if (kind === 'percent') return n.toFixed(2) + '%';
+  if (kind === 'currency') {
+    if (Math.abs(n) >= 1000) return '$' + _COMPACT.format(n);
+    return '$' + n.toFixed(2);
+  }
+  if (Math.abs(n) >= 1000) return _COMPACT.format(n);
+  return Math.round(n).toString();
+}
+
 export function fakeValue(m) {
   const h = m.name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
   const cat = m.name.toLowerCase();
-  if (cat.includes("%") || cat.includes("rate") || cat.includes("margin") || cat.includes("share") || cat.includes("retention") || cat.includes("conversion") || cat.includes("variance") || cat.includes("uptime") || cat.includes("hold")) return (h % 900 / 10 + 5).toFixed(2) + "%";
+  if (cat.includes("%") || cat.includes("rate") || cat.includes("margin") || cat.includes("share") || cat.includes("retention") || cat.includes("conversion") || cat.includes("variance") || cat.includes("uptime") || cat.includes("hold")) return formatCompactNumber(h % 900 / 10 + 5, 'percent');
   if (cat.includes("time") || cat.includes("latency") || cat.includes("duration") || cat.includes("freshness")) return (h % 180 / 10 + 0.5).toFixed(1) + "s";
-  if (cat.includes("count") || cat.includes("registr") || cat.includes("dau") || cat.includes("mau")) return (h % 50000 + 1000).toLocaleString("en");
-  if (cat.includes("deposit") || cat.includes("arpu") || cat.includes("ltv") || cat.includes("cac") || cat.includes("ggr") || cat.includes("ngr") || cat.includes("wager")) return "$" + (h % 5000 / 10 + 8).toFixed(2);
+  if (cat.includes("count") || cat.includes("registr") || cat.includes("dau") || cat.includes("mau")) return formatCompactNumber(h % 50000 + 1000, 'number');
+  if (cat.includes("deposit") || cat.includes("arpu") || cat.includes("ltv") || cat.includes("cac") || cat.includes("ggr") || cat.includes("ngr") || cat.includes("wager")) return formatCompactNumber(h % 5000 / 10 + 8, 'currency');
   if (cat.includes("ratio")) return (h % 400 / 100 + 1).toFixed(2) + "×";
-  return (h % 999 + 10).toString();
+  return formatCompactNumber(h % 999 + 10, 'number');
 }
 
 export function sevBadge(name) {

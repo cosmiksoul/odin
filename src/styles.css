@@ -538,15 +538,22 @@ html, body { overflow-x: hidden; }
 .pinc__delta.up { color: var(--up); }
 .pinc__delta.down { color: var(--down); }
 .pinc__spark { width: 56px; height: 18px; flex-shrink: 0; }
+/* FIX-C: always visible bordered button matching ControlBar minimal style.
+   No hover-only opacity — discoverable at rest, lights up on card hover. */
 .pinc__open {
   margin-left: auto;
   font-size: 9px; letter-spacing: 0.12em;
-  color: var(--fg-4);
   text-transform: uppercase;
-  opacity: 0;
-  transition: opacity 120ms;
+  background: transparent;
+  color: var(--fg-3);
+  border: 1px solid var(--line-2);
+  padding: 3px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 120ms, color 120ms, border-color 120ms;
 }
-.pinc:hover .pinc__open { opacity: 1; color: var(--accent); }
+.pinc__open:hover { color: var(--fg); background: var(--bg-3); border-color: var(--line); }
+.pinc:hover .pinc__open { color: var(--fg); }
 /* Two-cell pill: active cell filled with accent, inactive cell outline only.
    Sun icon left, moon icon right. Fully visible regardless of font issues. */
 .thsw {
@@ -2476,4 +2483,123 @@ html, body { overflow-x: hidden; }
 .odin__tt-delta.up { color: var(--up); }
 .odin__tt-delta.down { color: var(--down); }
 .odin__tt-meta { font-size: 10px; letter-spacing: 0.06em; color: var(--fg-3); margin-top: 2px; }
+
+/* ===== Sprint 2 fix-cycle: Graph layout (canvas + side panel) ===== */
+.odin__main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.odin__main > .odin__canvas {
+  flex: 1;
+  min-width: 0;
+}
+
+/* HTML overlay column headers — fixed at top, do not scale with zoom (FIX-2) */
+.odin__col-headers {
+  position: absolute;
+  top: 8px; left: 16px; right: 16px;
+  display: flex;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 4;
+}
+.odin__col-header {
+  pointer-events: auto;
+  flex: 1;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: 2px;
+  font-size: 11px;
+  color: var(--fg);
+  cursor: pointer;
+  text-align: left;
+  transition: background 140ms, opacity 140ms;
+}
+.odin__col-header:hover { background: var(--bg-3); }
+.odin__col-header--coll { opacity: 0.6; }
+.odin__col-header__chev { color: var(--fg-3); width: 10px; }
+.odin__col-header__lbl { font-weight: 700; letter-spacing: 0.08em; flex: 1; }
+.odin__col-header__n {
+  background: var(--bg-3); border: 1px solid var(--line-2);
+  color: var(--fg-3);
+  padding: 1px 8px; border-radius: 2px;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Multi-pin side panel (FIX-1) — replaces the old absolute-positioned .odin__pinned */
+.odin__sidepanel {
+  flex: 0 0 340px;
+  display: flex; flex-direction: column;
+  background: var(--bg-2);
+  border-left: 1px solid var(--line);
+  min-height: 0;
+}
+.odin__sidepanel-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 10px; letter-spacing: 0.12em;
+  color: var(--fg-4);
+}
+.odin__sidepanel-lbl { color: var(--accent); font-weight: 700; }
+.odin__sidepanel-n {
+  background: var(--bg-3); border: 1px solid var(--line-2);
+  color: var(--fg-2);
+  padding: 1px 6px; border-radius: 2px;
+  font-size: 10px; font-variant-numeric: tabular-nums;
+}
+.odin__sidepanel-clear {
+  margin-left: auto;
+  background: transparent; border: 0;
+  color: var(--fg-4);
+  font-family: inherit; font-size: 10px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-transform: lowercase;
+}
+.odin__sidepanel-clear:hover { color: var(--fg); }
+.odin__sidepanel-list {
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  min-height: 0;
+}
+.odin__sidepanel-list::-webkit-scrollbar { width: 6px; }
+.odin__sidepanel-list::-webkit-scrollbar-thumb { background: var(--line-2); }
+
+/* ===== Sprint 2 fix-cycle: Catalog section subtitles (FIX-6) ===== */
+.catsec__titlewrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.catsec__subtitle {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--fg-4);
+  font-weight: 400;
+  text-transform: none;
+}
+.catsec--coll .catsec__subtitle { opacity: 0.7; }
+
+/* ===== Sprint 2 fix-cycle: ControlBar — symmetric L/R padding (FIX-8) ===== */
+.cbar {
+  padding-left: 20px;
+  padding-right: 20px;
+  gap: 16px;
+}
+.cbar__size {
+  padding: 0 8px;  /* equal L/R */
+  gap: 6px;
+}
+.cbar__view { gap: 10px; }
+
 
