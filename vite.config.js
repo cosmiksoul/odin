@@ -5,11 +5,14 @@ import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
+// base '/odin/' only for the production build (GitHub Pages serves the
+// project site under /<repo>/); dev server stays at root.
+export default defineConfig(({ command }) => ({
   root: 'src',
+  base: command === 'build' ? '/odin/' : '/',
   plugins: [react()],
   build: {
     outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,
   },
-});
+}));
