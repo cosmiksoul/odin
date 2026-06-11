@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "L1",
+              "L2",
+              "L3"
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "number",
+              "percent",
+              "currency",
+              "duration"
+            ]
+          },
+          "frequency": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "must",
+              "should",
+              "nice"
+            ]
+          },
+          "formula": {
+            "type": "string"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dims": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "alerts": {
+            "type": "object",
+            "properties": {
+              "red": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "lt",
+                      "gt"
+                    ]
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "basis": {
+                    "type": "string",
+                    "enum": [
+                      "value",
+                      "wow_pct"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "value",
+                  "basis"
+                ],
+                "additionalProperties": false
+              },
+              "yellow": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "lt",
+                      "gt"
+                    ]
+                  },
+                  "value": {
+                    "type": "number"
+                  },
+                  "basis": {
+                    "type": "string",
+                    "enum": [
+                      "value",
+                      "wow_pct"
+                    ]
+                  }
+                },
+                "required": [
+                  "op",
+                  "value",
+                  "basis"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "benchmarks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "category",
+          "level",
+          "unit",
+          "frequency"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "metrics"
+  ],
+  "additionalProperties": false
+}
