@@ -1,18 +1,16 @@
 # ODIN
 
-Privacy-first BI tool with local LLM for analysts in regulated industries (iGaming, fintech, healthcare).
+Local-first каталог метрик: приносишь Parquet-витрину с агрегатами + `catalog.json` со схемой —
+получаешь каталог метрик с графом зависимостей, динамикой, разрезами, алертами и MD-контекстом.
+Данные не покидают твою машину.
 
-## Status
+**Статус:** реанимация (2026-06). Идёт переписывание на TypeScript-монорепо по
+[дизайну ODIN 2.0](docs/superpowers/specs/2026-06-11-odin-2.0-design.md).
+Старый read-only прототип: [демо на GitHub Pages](https://cosmiksoul.github.io/odin/), ветка `legacy`.
 
-Pre-MVP. Documentation finalized, prototype in `src/` (Sprint 1: build foundation).
+## Структура
 
-## Quick start
-
-[Будет добавлено когда будет M3 (Electron setup)]
-
-## Documentation
-
-- **For developers using Claude Code:** see `CLAUDE.md`
-- **Concept and architecture:** `docs/context/`
-- **Backlog and sprints:** `docs/project/`
-- **User documentation:** `docs/user/`
+- `packages/core` — типы, схемы, валидатор
+- `packages/tools` — миграция сида, CLI-валидатор vault
+- `vault-demo/` — демо-vault (236 iGaming-метрик)
+- `docs/architecture.md` — архитектура; `docs/archive/` — историческая документация
