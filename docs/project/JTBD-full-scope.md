@@ -4,6 +4,8 @@
 
 > **Статус:** валидирован автором 2026-04-25. Все ранее открытые вопросы закрыты в пользу включения в MVP. Финальный список переедет в `<project>/docs/JTBD-full-scope.md` под управление Cowork.
 
+> **MVP разбит на два этапа** (см. ADR-016): **MVP-1** — read-only Catalog (M1 + M2 + опционально M3 + частично M4), **MVP-2** — full ODIN с WYSIWYG/sync/LLM (M-CRED, M-SYNC, M-EDIT, M5-M9). Теги `[M-N]` остаются как есть; разделение по MVP-1/MVP-2 — на уровне milestones, не stories.
+
 ---
 
 ## Легенда
@@ -217,34 +219,55 @@
 
 > См. open-questions.md Q-UX.1 — Q-UX.4.
 
-- [ ] Как пользователь я хочу видеть **консистентный preview метрики** в Graph и Catalog режимах (один компонент, одни данные), чтобы не путаться при переключении `[M1, Q-UX.1]` — **в Sprint 2**
-- [ ] Как пользователь я хочу **bulk export разных метрик с разными размерностями** в едином long-format CSV (без потери данных), чтобы выгружать смешанные наборы `[M1, Q-UX.2]`
-- [x] Как пользователь я хочу чтобы **мелкие интерфейсные баги** (TBD: список) были устранены, чтобы прототип работал стабильно `[M1, Q-UX.4]` — *Sprint 1: контраст заголовков карточек + drawer; полный список собран в Sprint 2 prompt*
-- [ ] Как пользователь я хочу **унифицированные фильтры** между Catalog и Graph view (один компонент, одинаковый порядок: Alerts → Level → Priority → Owner → Freq → Category) `[M1, Sprint 2]`
-- [ ] Как пользователь я хочу видеть **счётчик "X из Y метрик"** в control-bar, чтобы понимать сколько отфильтровано из общего числа `[M1, Sprint 2]`
-- [ ] Как пользователь я хочу **сворачивать секции L1/L2/L3** на Graph и Catalog по клику на подпись секции, чтобы фокусироваться на нужном уровне без полной фильтрации `[M1, Sprint 2]`
-- [ ] Как пользователь я хочу видеть **alerts-счётчик "X red · Y yellow · Z ok"** в control-bar Catalog (как сейчас на Home), чтобы быстро оценить здоровье метрик `[M1, Sprint 2]`
-- [ ] Как пользователь я хочу чтобы **Graph view имел такой же control-bar** как Catalog (с Filters, zoom, счётчиками), а не разрозненные элементы по углам `[M1, Sprint 2]`
-- [ ] Как пользователь я хочу чтобы **подписи всех нод графа** были постоянно видны (не только L1, не только на hover) `[M1, Sprint 2]`
-- [ ] Как пользователь я хочу чтобы **тултип на ноде графа** показывал состояние метрики (Red/Yel/OK + значение), а не нечитаемый чёрный текст `[M1, Sprint 2]`
-- [ ] Как пользователь я хочу чтобы **семантика уровней L1/L2/L3** была правильной (L1 Стратегические для C-level, L2 Операционные для команд, L3 Диагностические для deep-dive), а не как в прототипе Claude Design `[M1, Sprint 2]`
+- [x] Как пользователь я хочу видеть **консистентный preview метрики** в Graph и Catalog режимах (один компонент, одни данные), чтобы не путаться при переключении `[M1, Q-UX.1]` — **Sprint 2:** `MetricPreview` общий для drawer Catalog и Graph. Pinned-карточка (`PinnedMetricCard`) — отдельный компонент с compact видом
+- [ ] Как пользователь я хочу **bulk export разных метрик с разными размерностями** в едином long-format CSV (без потери данных), чтобы выгружать смешанные наборы `[M1, Q-UX.2]` — **Sprint 3 кандидат**
+- [x] Как пользователь я хочу чтобы **мелкие интерфейсные баги** (TBD: список) были устранены, чтобы прототип работал стабильно `[M1, Q-UX.4]` — *Sprint 1: контраст заголовков карточек + drawer; Sprint 2 fix-cycle: 8 UX-фиксов*
+- [x] Как пользователь я хочу **унифицированные фильтры** между Catalog и Graph view (один компонент, одинаковый порядок: Alerts → Level → Priority → Owner → Freq → Category) `[M1]` — **Sprint 2:** `FiltersDrawer` общий, alerts стал multi-select Set
+- [x] Как пользователь я хочу видеть **счётчик "X из Y метрик"** в control-bar, чтобы понимать сколько отфильтровано из общего числа `[M1]` — **Sprint 2:** в `ControlBar`, плюс fix-cycle добавил cascading counts внутри FiltersDrawer
+- [x] Как пользователь я хочу **сворачивать секции L1/L2/L3** на Graph и Catalog по клику на подпись секции, чтобы фокусироваться на нужном уровне без полной фильтрации `[M1]` — **Sprint 2:** работает на обоих view, persist в localStorage. Default: L1 expanded, L2/L3 collapsed.
+- [x] Как пользователь я хочу видеть **alerts-счётчик "X red · Y yellow · Z ok"** в control-bar Catalog (как сейчас на Home), чтобы быстро оценить здоровье метрик `[M1]` — **Sprint 2:** в `ControlBar`, реагирует на фильтрацию live
+- [x] Как пользователь я хочу чтобы **Graph view имел такой же control-bar** как Catalog (с Filters, zoom, счётчиками), а не разрозненные элементы по углам `[M1]` — **Sprint 2:** общий `ControlBar`, view-specific slot для Zoom
+- [x] Как пользователь я хочу чтобы **подписи всех нод графа** были постоянно видны (не только L1, не только на hover) `[M1]` — **Sprint 2:** все ноды имеют постоянные подписи, размер шрифта спадает с уровнем (L1=11, L2=10, L3=9)
+- [x] Как пользователь я хочу чтобы **тултип на ноде графа** показывал состояние метрики (Red/Yel/OK + значение), а не нечитаемый чёрный текст `[M1]` — **Sprint 2:** status badge + current value + WoW delta + meta. Fix-cycle 2 — позиционируется рядом с нодой, не в углу.
+- [x] Как пользователь я хочу чтобы **семантика уровней L1/L2/L3** была правильной (L1 Стратегические для C-level, L2 Операционные для команд, L3 Диагностические для deep-dive), а не как в прототипе Claude Design `[M1]` — **Sprint 2:** правильные подписи, контрастные на тёмной теме
+- [ ] Как пользователь я хочу чтобы **запинить N метрик в Graph side-panel** для side-by-side сравнения при расследовании `[M1]` — **Sprint 2 fix-cycle:** multi-pin восстановлен через `PinnedMetricCard`. Подсветка путей через pinned-ноду остаётся постоянной (fix-cycle 2).
 
 ---
 
-## 9b. Tech debt прототипа (M1-cleanup, Sprint 2)
+## 9b. Tech debt прототипа (M1-cleanup)
 
-> Tech debt из Sprint 1 sprint-report. Часть выпиливается в Sprint 2, часть откладывается.
+> Tech debt из Sprint 1+2. Завершённое из Sprint 2 — отмечено [x]. Открытое — переехало в Sprint 3+ скоуп.
 
-- [ ] **Выпил tweaks-panel** — рудимент Claude Design (интерактивные «твиксы» для дизайн-итераций), убрать целиком: `tweaks-panel.jsx`, `tweaks-ui.jsx`, и все `tw`-пропсы из `app.jsx` props chain `[Sprint 2]`
-- [ ] **Унифицировать дубликаты функций** — `cx`, `gSparkPath`/`gFakeValue`/`gFakeDelta` живут параллельно в `graph-view.jsx` и `app.jsx` (артефакт script-tag режима). Вынести в `lib/util.js` `[Sprint 2]`
-- [ ] **Загрузить 236 метрик из seed JSON** вместо захардкоженных 47 в `data.js` `[Sprint 2]` — см. `default-vault/_seed/igaming_metrics.json`
-- [ ] **Bundled-fonts вместо Google Fonts CDN** — `@import url('https://fonts.googleapis.com/...')` в `styles.css` нарушит ADR-008 (local-first) при упаковке в Electron. Фикс до M3 `[pre-M3]`
-- [ ] **Saved/watchlist persistence** — заменить browser `localStorage` на file-based store или config (для Electron). Отложено `[M3 или отдельный спринт]`
-- [ ] **Graph scaling на 236 нодах** — текущий layout перегружен, подписи перекрываются. Sprint 2 fix-cycle разнесёт ноды и (опционально) добавит auto-hide labels at low zoom — это **temporary mitigation**. Полное решение в Sprint 3:
-  - **Filter-driven graph** (рекомендация Cowork) — по дефолту L2/L3 свёрнуты (после Sprint 2 fix), показывается только L1 ~58 нод. Если пользователь хочет глубже — фильтрует по L2/L3 и видит только релевантные. Граф = investigation tool, не overview map.
-  - Альтернативы (не рекомендую): force-directed layout (d3-force), clustering, virtualization. Дороже в реализации, не решают product-проблему.
-  - **Сворачивание отдельных нод** — обсуждено и отклонено: создаёт state hell, конфликт с pin-механикой. Текущий collapse на уровне секций L1/L2/L3 — правильная гранулярность.
-- [ ] **Catalog scroll visibility** — после загрузки 236 метрик скрытый scrollbar делает прокрутку «слепой» (непонятен прогресс). Варианты: видимый кастомный scrollbar (5 строк CSS, рекомендую) / sticky header с прогресс-баром / virtualized list (overkill для 236) `[Sprint 3]`
+- [x] **Выпил tweaks-panel** — `tweaks-panel.jsx`, `tweaks-ui.jsx` удалены, `tw`-props chain очищена в `app.jsx` `[Sprint 2 Pass 1]`
+- [x] **Унифицировать дубликаты функций** — `src/lib/util.js`: `cx`, `sparkPath`, `fakeValue`, `fakeDelta`, `sevBadge`. Префикс `g*` снят `[Sprint 2 Pass 1]`
+- [x] **Загрузить 236 метрик из seed JSON** — `adaptMetric()` в `data.js`, читает `default-vault/_seed/igaming_metrics.json` `[Sprint 2 Pass 1]`
+- [ ] **Bundled-fonts вместо Google Fonts CDN** — `@import url('https://fonts.googleapis.com/...')` в `styles.css` нарушит ADR-008 при упаковке в Electron. Фикс до M3 `[pre-M3]`
+- [ ] **Saved/watchlist persistence** — заменить browser `localStorage` на file-based store или config (для Electron). Отложено `[M3]`
+- [ ] **Graph scaling на 236 нодах** — Sprint 2 fix-cycle частично mitigated (разнесли ноды, default L2/L3 collapsed). Полное решение в Sprint 3 — **filter-driven graph**. Архитектурное обоснование и почему отклонены force-directed / clustering / virtualization / сворачивание отдельных нод — см. **ADR-015**. `[Sprint 3]`
+- [ ] **Catalog scroll visibility** — скрытый scrollbar после 236 метрик. Варианты: видимый кастомный scrollbar (рекомендую, 5 строк CSS) / sticky header с прогресс-баром / virtualized list (overkill) `[Sprint 3]`
+- [ ] **Pinned-карточка vs Catalog drawer cosmetic difference** — `PinnedMetricCard` сделан как отдельный компонент (см. **ADR-014**: compact-карточки = отдельные компоненты, не варианты MetricPreview). Карточки немного отличаются визуально. Кандидат на унификацию через выделение visual primitives (status badge, sparkline, value formatter) в shared слой при росте дизайн-системы `[Sprint 3+]`
+- [ ] **Bundle size warning >500KB** — main chunk 582KB. Семя 236 метрик (~250KB JSON) зашито. Lazy-import seed / code-splitting по route'ам — для публичной демки `[pre-M9]`
+- [ ] **Dead CSS** (`.odin__pinned*`, `.odin__zoom*`, `.odin__tt-lvl/deps`) — классы из старого PinnedCard / floating zoom / старого тултипа. После Sprint 2 fix-cycles большинство снова в использовании. Финальная зачистка `[Sprint 3+]`
+- [ ] **`ThemeToggle` функция в `app.jsx:998`** — определена но не вызывается. После Pass 1 props (`tw`, `setTweak`) больше не существуют — broken signature. Удалить отдельным fix или при следующем рефакторинге `app.jsx` `[Sprint 3]`
+
+---
+
+## 9c. Параллельные research-задачи для пользователя (backlog)
+
+> Не привязаны к спринтам. Параллельная работа когда есть окно. Результат интегрируется в проект отдельным мини-циклом.
+
+- [ ] **Research метрик через Gemini Deep Research** — переработать seed-каталог (236 → ~150-200 чистых, реалистичные категории и бенчмарки). Промпт готов: `gemini-research-prompt-metrics.md`. Результат → возможно отдельный Content-Cowork инстанс для доводки → Code-prompt на замену seed JSON. Workflow в `communication/2026-04-26-content-cowork-workflow.md`. **Цель:** правдоподобный seed до M4, не идеальный.
+
+- [ ] **Research архитектуры Tolaria** ([github.com/refactoringhq/tolaria](https://github.com/refactoringhq/tolaria), AGPL-3.0) — близкий референс по архитектуре MD+git+MCP+WYSIWYG. Особый интерес:
+  - **`docs/adr/`** — как они структурировали архитектурные решения, какие были развилки
+  - **WYSIWYG имплементация** — BlockNote как редактор block-based markdown с frontmatter (прямой кандидат для нашего M-EDIT вместо TipTap/Lexical)
+  - **MCP-сервер** — `bundle-mcp-server.mjs`, как они стримят MD-vault для Claude Code/Codex (прямой прецедент для нашего Хугина)
+  - **Git sync** — как сделали in-app git-клиент (commit/push/pull/history per note) на Tauri Rust-side
+  - **Хранение и организация заметок** — структура vault, naming conventions, как обрабатывают frontmatter
+
+  **Важно:** не копировать код (AGPL copyleft). Изучаем паттерны, переписываем своё. Запустить отдельный research-инстанс (отдельный чат Claude / Cowork agent) который пройдётся по их репо и выдаст структурированную сводку.
+
+  **Контекст про граф view (от пользователя):** Tolaria сделана как «своя копия Obsidian» **без graph view**. Получилось норм. Это product insight — не у всех пользователей граф работает (у самого пользователя в Obsidian с graph view всё равно бардак). Возможно стоит после Sprint 3 переоценить приоритет Graph polish vs другие фичи, особенно если вертикальный slice MD (Sprint 4) покажет что MD-only navigation покрывает ICP use case.
 
 ---
 
